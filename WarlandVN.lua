@@ -175,8 +175,8 @@ hookfunction(require(game:GetService("ReplicatedStorage").Effect.Container.Death
 hookfunction(require(game:GetService("ReplicatedStorage").Effect.Container.Respawn), function() end)
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 Window = Fluent:CreateWindow({
-    Title = "Ten Hub",
-    SubTitle="Blox Fruits", 
+    Title = "WarLand Hub",
+    SubTitle="by datrc12", 
     TabWidth=155, 
     Theme="Darker",
     Acrylic=false,
@@ -2320,7 +2320,7 @@ Button.Parent = ScreenGui
 Button.Size = UDim2.new(0, 50, 0, 50)
 Button.Position = UDim2.new(0.015, 0, 0.02, 20)
 Button.BackgroundTransparency = 1
-Button.Image = "rbxassetid://91347148253026"
+Button.Image = "rbxassetid://98737934759278"
 local UICorner = Instance.new("UICorner")
 
 UICorner.CornerRadius = UDim.new(1, 0)
@@ -2357,14 +2357,14 @@ task.defer(function()
 end)
 wait(1.0)
 Tabs.Info:AddButton({
-        Title="Ten Hub",
+        Title= "WarLand Hub",
         Description="Discord",
         Callback=function()
-            setclipboard(tostring("https://discord.gg/tenhub")) 
+            setclipboard(tostring("https://discord.gg/WMWKCWxXg")) 
         end
 })
 Tabs.Info:AddButton({
-    Title="Ten Nguoi Lam",
+    Title="datrc12",
     Description="Youtube",
     Callback=function()
         setclipboard(tostring("https://www.youtube.com/"))
@@ -2378,7 +2378,7 @@ Tabs.Info:AddButton({
     end
 })
 Tabs.Info:AddParagraph({
-    Title="Nguoi Lam",
+    Title="datrc2",
     Content="Credits"
 })
 local executorName
@@ -2714,7 +2714,7 @@ spawn(function()
                 local CFrameTarget = CFrame.new(BushPosition)
                 Tween2(CFrameTarget)
                 Fluent:Notify({
-                    Title = "Ten Hub",
+                    Title = "WarLand Hub",
                     Content = "Find Berry: " .. tostring(BerryName),
                     Duration = 10
                 })
@@ -4109,7 +4109,7 @@ local function createToggle(title, toggleKey, islands, islandName, notification)
             _G[toggleKey] = false
             if not notified then
                 Fluent:Notify({
-                    Title = "Ten Hub",
+                    Title = "WarLand Hub",
                     Content = notification,
                     Duration = 10
                 })
@@ -9329,7 +9329,7 @@ local notificationCooldown = 10
 local currentTime = tick()
 if currentTime - lastNotificationTime >= notificationCooldown then
     game.StarterGui:SetCore("SendNotification", {
-        Title = "Ten Hub",
+        Title = "WarLand Hub",
         Text = "Successfully",
         Duration = 1
     })
