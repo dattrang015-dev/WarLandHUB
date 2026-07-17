@@ -2319,7 +2319,7 @@ Button.Name = "CustomButton"
 Button.Parent = ScreenGui
 Button.Size = UDim2.new(0, 50, 0, 50)
 Button.Position = UDim2.new(0.015, 0, 0.02, 20)
-Button.BackgroundTransparency = 1
+Button.BackgroundTransparency = 0
 Button.Image = "rbxassetid://99314900448368"
 local UICorner = Instance.new("UICorner")
 
