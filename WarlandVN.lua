@@ -2309,7 +2309,7 @@ local ContentProvider = game:GetService("ContentProvider")
 local playerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 local existingGui = playerGui:FindFirstChild("CustomScreenGui")
 if existingGui then
-    existingGui:Destroy()
+	existingGui:Destroy()
 end
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "CustomScreenGui"
@@ -2319,7 +2319,7 @@ Button.Name = "CustomButton"
 Button.Parent = ScreenGui
 Button.Size = UDim2.new(0, 50, 0, 50)
 Button.Position = UDim2.new(0.015, 0, 0.02, 20)
-Button.BackgroundTransparency = 0
+Button.BackgroundTransparency = 1
 Button.Image = "rbxassetid://98737934759278"
 local UICorner = Instance.new("UICorner")
 
