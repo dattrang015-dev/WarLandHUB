@@ -94,7 +94,7 @@ task.spawn(function()
 end)
 
 -- ================================================================= --
--- GIAO DIỆN UI HUB ĐA TAB (MULTI-TAB SYSTEM)
+-- GIAO DIỆN UI HUB ĐA TAB (FIX HIỂN THỊ TRÊN MOBILE)
 -- ================================================================= --
 local function GetGuiParent(): Instance
     local success, result = pcall(function() return CoreGui end)
@@ -103,18 +103,18 @@ local function GetGuiParent(): Instance
 end
 
 local ParentGui = GetGuiParent()
-local OldGui = ParentGui:FindFirstChild("MultiTabMobileHub")
+local OldGui = ParentGui:FindFirstChild("MultiTabMobileHubFix")
 if OldGui then OldGui:Destroy() end
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "MultiTabMobileHub"
+ScreenGui.Name = "MultiTabMobileHubFix"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = ParentGui
 
--- Main Frame (Khung chính)
+-- Main Frame
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 320, 0, 260)
-MainFrame.Position = UDim2.new(0.05, 0, 0.25, 0)
+MainFrame.Size = UDim2.new(0, 340, 0, 280)
+MainFrame.Position = UDim2.new(0.05, 0, 0.2, 0)
 MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 26)
 MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
@@ -132,24 +132,24 @@ MainStroke.Parent = MainFrame
 
 -- Tiêu đề
 local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Size = UDim2.new(1, -40, 0, 30)
-TitleLabel.Position = UDim2.new(0, 10, 0, 0)
+TitleLabel.Size = UDim2.new(1, -40, 0, 35)
+TitleLabel.Position = UDim2.new(0, 12, 0, 0)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "⚡ MULTI-TAB MOBILE HUB"
+TitleLabel.Text = "⚡ MOBILE HUB (FIXED 3 TABS)"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TitleLabel.TextSize = 12
+TitleLabel.TextSize = 13
 TitleLabel.Font = Enum.Font.GothamBold
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 TitleLabel.Parent = MainFrame
 
 -- Nút thu nhỏ (-)
 local MinimizeBtn = Instance.new("TextButton")
-MinimizeBtn.Size = UDim2.new(0, 26, 0, 26)
-MinimizeBtn.Position = UDim2.new(1, -32, 0, 3)
+MinimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+MinimizeBtn.Position = UDim2.new(1, -35, 0, 3)
 MinimizeBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
 MinimizeBtn.Text = "-"
 MinimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-MinimizeBtn.TextSize = 14
+MinimizeBtn.TextSize = 16
 MinimizeBtn.Font = Enum.Font.GothamBold
 MinimizeBtn.Parent = MainFrame
 
@@ -157,23 +157,26 @@ local MinCorner = Instance.new("UICorner")
 MinCorner.CornerRadius = UDim.new(0, 6)
 MinCorner.Parent = MinimizeBtn
 
--- Thanh chuyển Tab (Tab Bar)
+-- Thanh Tab Bar
 local TabBar = Instance.new("Frame")
-TabBar.Size = UDim2.new(1, -20, 0, 30)
-TabBar.Position = UDim2.new(0, 10, 0, 32)
-TabBar.BackgroundTransparency = 1
+TabBar.Size = UDim2.new(1, -20, 0, 36)
+TabBar.Position = UDim2.new(0, 10, 0, 38)
+TabBar.BackgroundColor3 = Color3.fromRGB(12, 12, 18)
 TabBar.Parent = MainFrame
+
+local TabBarCorner = Instance.new("UICorner")
+TabBarCorner.CornerRadius = UDim.new(0, 6)
+TabBarCorner.Parent = TabBar
 
 local TabListLayout = Instance.new("UIListLayout")
 TabListLayout.FillDirection = Enum.FillDirection.Horizontal
 TabListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-TabListLayout.Padding = UDim.new(0, 5)
-TabListLayout.Parent = TabBar
+TabListLayout.Parent = TabBar -- Đã fix dòng này để các tab hiện ngang hàng chuẩn xác!
 
--- Khung chứa nội dung các Tab (Container)
+-- Khung chứa nội dung các Tab
 local Container = Instance.new("Frame")
-Container.Size = UDim2.new(1, -20, 1, -75)
-Container.Position = UDim2.new(0, 10, 0, 68)
+Container.Size = UDim2.new(1, -20, 1, -86)
+Container.Position = UDim2.new(0, 10, 0, 78)
 Container.BackgroundColor3 = Color3.fromRGB(25, 25, 38)
 Container.BorderSizePixel = 0
 Container.Parent = MainFrame
@@ -185,7 +188,7 @@ ContainerCorner.Parent = Container
 -- Nút nổi thu nhỏ để mở lại menu
 local OpenButton = Instance.new("TextButton")
 OpenButton.Size = UDim2.new(0, 45, 0, 45)
-OpenButton.Position = UDim2.new(0.05, 0, 0.25, 0)
+OpenButton.Position = UDim2.new(0.05, 0, 0.2, 0)
 OpenButton.BackgroundColor3 = Color3.fromRGB(18, 18, 26)
 OpenButton.Text = "⚡"
 OpenButton.TextColor3 = Color3.fromRGB(0, 200, 255)
@@ -206,27 +209,21 @@ OpenBtnStroke.Thickness = 2
 OpenBtnStroke.Parent = OpenButton
 
 -- ================================================================= --
--- TẠO CÁC TAB (COMBAT, EVENT SCANNER, SETTINGS)
+-- HÀM TẠO TAB CHUẨN XÁC
 -- ================================================================= --
 local tabs = {}
 local currentActiveTab = nil
 
 local function CreateTab(name: string)
-    -- Nút trên TabBar
     local tabBtn = Instance.new("TextButton")
-    tabBtn.Size = UDim2.new(0.32, 0, 1, 0)
-    tabBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+    tabBtn.Size = UDim2.new(0.333, 0, 1, 0)
+    tabBtn.BackgroundTransparency = 1
     tabBtn.Text = name
-    tabBtn.TextColor3 = Color3.fromRGB(180, 180, 180)
+    tabBtn.TextColor3 = Color3.fromRGB(160, 160, 160)
     tabBtn.TextSize = 11
     tabBtn.Font = Enum.Font.GothamBold
     tabBtn.Parent = TabBar
 
-    local btnCorner = Instance.new("UICorner")
-    btnCorner.CornerRadius = UDim.new(0, 6)
-    btnCorner.Parent = tabBtn
-
-    -- Khung nội dung của Tab
     local tabContent = Instance.new("ScrollingFrame")
     tabContent.Size = UDim2.new(1, 0, 1, 0)
     tabContent.BackgroundTransparency = 1
@@ -241,46 +238,42 @@ local function CreateTab(name: string)
     list.Parent = tabContent
 
     local padding = Instance.new("UIPadding")
-    padding.PaddingTop = UDim.N(10)
+    padding.PaddingTop = UDim.new(0, 10)
+    padding.PaddingBottom = UDim.new(0, 10)
     padding.PaddingLeft = UDim.new(0, 10)
     padding.PaddingRight = UDim.new(0, 10)
     padding.Parent = tabContent
 
-    -- Sự kiện chuyển tab
     tabBtn.MouseButton1Click:Connect(function()
         for _, t in pairs(tabs) do
             t.Content.Visible = false
-            t.Button.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
-            t.Button.TextColor3 = Color3.fromRGB(180, 180, 180)
+            t.Button.TextColor3 = Color3.fromRGB(160, 160, 160)
         end
         tabContent.Visible = true
-        tabBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
-        tabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        tabBtn.TextColor3 = Color3.fromRGB(0, 200, 255)
     end)
 
     local tabData = {Button = tabBtn, Content = tabContent}
     table.insert(tabs, tabData)
 
-    -- Mặc định chọn tab đầu tiên
     if not currentActiveTab then
         currentActiveTab = tabData
         tabContent.Visible = true
-        tabBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
-        tabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        tabBtn.TextColor3 = Color3.fromRGB(0, 200, 255)
     end
 
     return tabContent
 end
 
 -- ================================================================= --
--- NỘI DUNG TỪNG TAB
+-- NỘI DUNG 3 TAB
 -- ================================================================= --
 
--- TAB 1: COMBAT
+-- [TAB 1]: COMBAT
 local CombatTab = CreateTab("⚔️ Combat")
 
 local ToggleBtn = Instance.new("TextButton")
-ToggleBtn.Size = UDim2.new(1, 0, 0, 40)
+ToggleBtn.Size = UDim2.new(1, 0, 0, 42)
 ToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 180, 80)
 ToggleBtn.Text = "COMBAT: ON"
 ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -304,24 +297,24 @@ ToggleBtn.MouseButton1Click:Connect(function()
 end)
 
 local InfoCombat = Instance.new("TextLabel")
-InfoCombat.Size = UDim2.new(1, 0, 0, 50)
+InfoCombat.Size = UDim2.new(1, 0, 0, 60)
 InfoCombat.BackgroundTransparency = 1
-InfoCombat.Text = "• Tốc độ đánh (Delay): 0.5s\n• Hitbox kích thước: 50x50\n• Tự động cầm vũ khí và quét mục tiêu."
+InfoCombat.Text = "• Tốc độ đánh: 0.5s\n• Hitbox: 50x50\n• Tự động cầm vũ khí và quét mục tiêu."
 InfoCombat.TextColor3 = Color3.fromRGB(0, 220, 255)
-InfoCombat.TextSize = 10
+InfoCombat.TextSize = 11
 InfoCombat.Font = Enum.Font.GothamMedium
 InfoCombat.TextWrapped = true
 InfoCombat.Parent = CombatTab
 
--- TAB 2: EVENT SCANNER
+-- [TAB 2]: EVENT SCANNER
 local ScannerTab = CreateTab("🔍 Scanner")
 
 local RunScanBtn = Instance.new("TextButton")
-RunScanBtn.Size = UDim2.new(1, 0, 0, 35)
+RunScanBtn.Size = UDim2.new(1, 0, 0, 38)
 RunScanBtn.BackgroundColor3 = Color3.fromRGB(255, 140, 0)
 RunScanBtn.Text = "BẮT ĐẦU QUÉT EVENT"
 RunScanBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-RunScanBtn.TextSize = 11
+RunScanBtn.TextSize = 12
 RunScanBtn.Font = Enum.Font.GothamBold
 RunScanBtn.Parent = ScannerTab
 
@@ -329,22 +322,11 @@ local ScanCorner = Instance.new("UICorner")
 ScanCorner.CornerRadius = UDim.new(0, 6)
 ScanCorner.Parent = RunScanBtn
 
--- Khung chứa kết quả quét trong tab
-local ResultsList = Instance.new("Frame")
-ResultsList.Size = UDim2.new(1, 0, 0, 110)
-ResultsList.BackgroundColor3 = Color3.fromRGB(18, 18, 26)
-ResultsList.Parent = ScannerTab
-
-local ResCorner = Instance.new("UICorner")
-ResCorner.CornerRadius = UDim.new(0, 6)
-ResCorner.Parent = ResultsList
-
 local ScrollRes = Instance.new("ScrollingFrame")
-ScrollRes.Size = UDim2.new(1, -10, 1, -10)
-ScrollRes.Position = UDim2.new(0, 5, 0, 5)
+ScrollRes.Size = UDim2.new(1, 0, 0, 120)
 ScrollRes.BackgroundTransparency = 1
 ScrollRes.AutomaticCanvasSize = Enum.AutomaticSize.Y
-ScrollRes.Parent = ResultsList
+ScrollRes.Parent = ScannerTab
 
 local ResListLayout = Instance.new("UIListLayout")
 ResListLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -392,13 +374,13 @@ RunScanBtn.MouseButton1Click:Connect(function()
     ScanEvents()
 end)
 
--- TAB 3: SETTINGS
+-- [TAB 3]: SETTINGS
 local SettingsTab = CreateTab("⚙️ Settings")
 
 local InfoLabel = Instance.new("TextLabel")
-InfoLabel.Size = UDim2.new(1, 0, 0, 80)
+InfoLabel.Size = UDim2.new(1, 0, 0, 90)
 InfoLabel.BackgroundTransparency = 1
-InfoLabel.Text = "• Giao diện Multi-Tab tối ưu cho Mobile.\n• Dùng nút [-] trên góc phải để thu nhỏ menu thành icon nổi [⚡].\n• Kéo thả khung linh hoạt bất cứ đâu."
+InfoLabel.Text = "• Đã fix hiển thị đủ 3 Tab ngang nhau.\n• Bấm nút [-] góc trên phải để thu nhỏ menu.\n• Kéo thả khung mượt mà trên màn hình."
 InfoLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 InfoLabel.TextSize = 11
 InfoLabel.Font = Enum.Font.GothamMedium
