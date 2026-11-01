@@ -11,7 +11,7 @@ if not LocalPlayer then return end
 -- CẤU HÌNH UNIVERSAL: AUTO CLICK, FAST ATTACK & HITBOX
 -- ================================================================= --
 local CONFIG = {
-    AttackDelay = 0.05,       -- Tốc độ đánh liên tục (càng nhỏ càng nhanh)
+    AttackDelay = 0.5,       -- Tốc độ đánh liên tục (càng nhỏ càng nhanh)
     MaxDistance = 100,        -- Khoảng cách tối đa để quét mục tiêu
     AutoEquip = true,         -- Tự động cầm vũ khí/tool trong balo
     ToggleKey = Enum.KeyCode.End, -- Phím End để bật/tắt nhanh
