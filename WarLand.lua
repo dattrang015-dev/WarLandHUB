@@ -255,4 +255,165 @@ local function CreateTab(name: string)
         end
         tabContent.Visible = true
         tabBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
-        tabBtn.TextColor3 = Color3.
+        tabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    end)
+
+    local tabData = {Button = tabBtn, Content = tabContent}
+    table.insert(tabs, tabData)
+
+    -- Mặc định chọn tab đầu tiên
+    if not currentActiveTab then
+        currentActiveTab = tabData
+        tabContent.Visible = true
+        tabBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+        tabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    end
+
+    return tabContent
+end
+
+-- ================================================================= --
+-- NỘI DUNG TỪNG TAB
+-- ================================================================= --
+
+-- TAB 1: COMBAT
+local CombatTab = CreateTab("⚔️ Combat")
+
+local ToggleBtn = Instance.new("TextButton")
+ToggleBtn.Size = UDim2.new(1, 0, 0, 40)
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 180, 80)
+ToggleBtn.Text = "COMBAT: ON"
+ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleBtn.TextSize = 12
+ToggleBtn.Font = Enum.Font.GothamBold
+ToggleBtn.Parent = CombatTab
+
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(0, 6)
+ToggleCorner.Parent = ToggleBtn
+
+ToggleBtn.MouseButton1Click:Connect(function()
+    _G.UniversalCombat = not _G.UniversalCombat
+    if _G.UniversalCombat then
+        ToggleBtn.Text = "COMBAT: ON"
+        ToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 180, 80)
+    else
+        ToggleBtn.Text = "COMBAT: OFF"
+        ToggleBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+    end
+end)
+
+local InfoCombat = Instance.new("TextLabel")
+InfoCombat.Size = UDim2.new(1, 0, 0, 50)
+InfoCombat.BackgroundTransparency = 1
+InfoCombat.Text = "• Tốc độ đánh (Delay): 0.5s\n• Hitbox kích thước: 50x50\n• Tự động cầm vũ khí và quét mục tiêu."
+InfoCombat.TextColor3 = Color3.fromRGB(0, 220, 255)
+InfoCombat.TextSize = 10
+InfoCombat.Font = Enum.Font.GothamMedium
+InfoCombat.TextWrapped = true
+InfoCombat.Parent = CombatTab
+
+-- TAB 2: EVENT SCANNER
+local ScannerTab = CreateTab("🔍 Scanner")
+
+local RunScanBtn = Instance.new("TextButton")
+RunScanBtn.Size = UDim2.new(1, 0, 0, 35)
+RunScanBtn.BackgroundColor3 = Color3.fromRGB(255, 140, 0)
+RunScanBtn.Text = "BẮT ĐẦU QUÉT EVENT"
+RunScanBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+RunScanBtn.TextSize = 11
+RunScanBtn.Font = Enum.Font.GothamBold
+RunScanBtn.Parent = ScannerTab
+
+local ScanCorner = Instance.new("UICorner")
+ScanCorner.CornerRadius = UDim.new(0, 6)
+ScanCorner.Parent = RunScanBtn
+
+-- Khung chứa kết quả quét trong tab
+local ResultsList = Instance.new("Frame")
+ResultsList.Size = UDim2.new(1, 0, 0, 110)
+ResultsList.BackgroundColor3 = Color3.fromRGB(18, 18, 26)
+ResultsList.Parent = ScannerTab
+
+local ResCorner = Instance.new("UICorner")
+ResCorner.CornerRadius = UDim.new(0, 6)
+ResCorner.Parent = ResultsList
+
+local ScrollRes = Instance.new("ScrollingFrame")
+ScrollRes.Size = UDim2.new(1, -10, 1, -10)
+ScrollRes.Position = UDim2.new(0, 5, 0, 5)
+ScrollRes.BackgroundTransparency = 1
+ScrollRes.AutomaticCanvasSize = Enum.AutomaticSize.Y
+ScrollRes.Parent = ResultsList
+
+local ResListLayout = Instance.new("UIListLayout")
+ResListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+ResListLayout.Padding = UDim.new(0, 4)
+ResListLayout.Parent = ScrollRes
+
+local function ScanEvents()
+    for _, child in ipairs(ScrollRes:GetChildren()) do
+        if child:IsA("Frame") then child:Destroy() end
+    end
+
+    local foldersToScan = {ReplicatedStorage, workspace}
+    local char = LocalPlayer.Character
+    if char then table.insert(foldersToScan, char) end
+
+    for _, folder in ipairs(foldersToScan) do
+        for _, obj in ipairs(folder:GetDescendants()) do
+            if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
+                local itemFrame = Instance.new("Frame")
+                itemFrame.Size = UDim2.new(1, 0, 0, 30)
+                itemFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+                itemFrame.Parent = ScrollRes
+
+                local corner = Instance.new("UICorner")
+                corner.CornerRadius = UDim.new(0, 4)
+                corner.Parent = itemFrame
+
+                local lbl = Instance.new("TextLabel")
+                lbl.Size = UDim2.new(1, -6, 1, 0)
+                lbl.Position = UDim2.new(0, 3, 0, 0)
+                lbl.BackgroundTransparency = 1
+                lbl.Text = "["..obj.ClassName.."] "..obj.Name
+                lbl.TextColor3 = Color3.fromRGB(0, 255, 150)
+                lbl.TextSize = 10
+                lbl.Font = Enum.Font.GothamBold
+                lbl.TextXAlignment = Enum.TextXAlignment.Left
+                lbl.TextWrapped = true
+                lbl.Parent = itemFrame
+            end
+        end
+    end
+end
+
+RunScanBtn.MouseButton1Click:Connect(function()
+    ScanEvents()
+end)
+
+-- TAB 3: SETTINGS
+local SettingsTab = CreateTab("⚙️ Settings")
+
+local InfoLabel = Instance.new("TextLabel")
+InfoLabel.Size = UDim2.new(1, 0, 0, 80)
+InfoLabel.BackgroundTransparency = 1
+InfoLabel.Text = "• Giao diện Multi-Tab tối ưu cho Mobile.\n• Dùng nút [-] trên góc phải để thu nhỏ menu thành icon nổi [⚡].\n• Kéo thả khung linh hoạt bất cứ đâu."
+InfoLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+InfoLabel.TextSize = 11
+InfoLabel.Font = Enum.Font.GothamMedium
+InfoLabel.TextWrapped = true
+InfoLabel.Parent = SettingsTab
+
+-- ================================================================= --
+-- SỰ KIỆN THU NHỎ / MỞ RỘNG
+-- ================================================================= --
+MinimizeBtn.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+    OpenButton.Visible = true
+end)
+
+OpenButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = true
+    OpenButton.Visible = false
+end)
